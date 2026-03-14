@@ -37,13 +37,11 @@ export async function POST(req: NextRequest) {
   const picks = Array.isArray(body.picks) ? (body.picks as BallotPick[]) : [];
 
   if (!firstName || !lastName) return NextResponse.json({ error: "First and last name are required." }, { status: 400 });
-  if (picks.length !== OSCARS_2026_CATEGORIES.length) return NextResponse.json({ error: "All 24 categories are required." }, { status: 400 });
+  if (picks.length === 0) return NextResponse.json({ error: "At least one pick is required." }, { status: 400 });
 
-  for (const category of OSCARS_2026_CATEGORIES) {
-    const pick = picks.find((item) => item.categorySlug === category.slug);
-    if (!pick) return NextResponse.json({ error: `${category.name} is missing.` }, { status: 400 });
+  for (const pick of picks) {
     const validationError = validatePick(pick);
-    if (validationError) return NextResponse.json({ error: `${category.name}: ${validationError}` }, { status: 400 });
+    if (validationError) return NextResponse.json({ error: `${pick.categorySlug}: ${validationError}` }, { status: 400 });
   }
 
   const fullNameNormalized = normalizeFullName(firstName, lastName);

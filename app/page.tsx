@@ -134,15 +134,18 @@ export default function BallotPage() {
   async function handleSubmit() {
     if (locked) { setStatus("Ballots are locked. The show is live."); return; }
     if (!draft.firstName.trim() || !draft.lastName.trim()) { setStatus("First and last name are required."); return; }
-    for (const cat of OSCARS_2026_CATEGORIES) {
-      const err = validatePick(draft.picks[cat.slug]);
-      if (err) { setStatus(`${cat.name}: ${err}`); return; }
+    const filledPicks = Object.values(draft.picks).filter(
+      (p) => p.firstChoice && p.secondChoice && p.firstChoice !== p.secondChoice
+    );
+    if (filledPicks.length === 0) {
+      setStatus("Please fill out at least one category before submitting.");
+      return;
     }
     const payload = {
       firstName: draft.firstName.trim(),
       lastName: draft.lastName.trim(),
       fullNameNormalized: normalizeFullName(draft.firstName, draft.lastName),
-      picks: Object.values(draft.picks),
+      picks: filledPicks,
     };
     setIsSaving(true);
     setStatus("");
