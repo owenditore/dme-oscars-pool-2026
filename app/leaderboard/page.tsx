@@ -3,6 +3,13 @@
 import { useEffect, useState } from "react";
 import { sortLeaderboard, type Ballot, type ResultEntry, OSCARS_2026_CATEGORIES } from "@/lib/oscars-2026-seed";
 
+const card: React.CSSProperties = {
+  background: "rgba(22,24,27,0.92)",
+  border: "1px solid rgba(255,255,255,0.1)",
+  boxShadow: "0 18px 60px rgba(0,0,0,0.28)",
+  borderRadius: 28,
+};
+
 export default function LeaderboardPage() {
   const [ballots, setBallots] = useState<Ballot[]>([]);
   const [results, setResults] = useState<ResultEntry[]>([]);
@@ -10,8 +17,8 @@ export default function LeaderboardPage() {
   useEffect(() => {
     let timer: number | undefined;
     async function load() {
-      const response = await fetch("/api/leaderboard", { cache: "no-store" });
-      const data = await response.json();
+      const res = await fetch("/api/leaderboard", { cache: "no-store" });
+      const data = await res.json();
       setBallots(data.ballots || []);
       setResults(data.results || []);
     }
@@ -21,52 +28,81 @@ export default function LeaderboardPage() {
   }, []);
 
   const ranked = sortLeaderboard(ballots, results);
-  const resultsMap = new Map(results.map((entry) => [entry.categorySlug, entry.winnerLabel]));
+  const resultsMap = new Map(results.map((r) => [r.categorySlug, r.winnerLabel]));
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-10">
-      <section className="card-dark rounded-[32px] p-6 md:p-10">
-        <div className="gold-pill inline-flex rounded-full px-3 py-1 text-xs font-medium tracking-[0.18em] uppercase">DME Oscars Pool 2026</div>
-        <h1 className="heading-font mt-5 text-4xl md:text-6xl">Live Leaderboard</h1>
-        <p className="mt-3 text-lg text-[#D7D9DD]">Winners will appear here as they’re announced. Scores update automatically throughout the night.</p>
-      </section>
+    <div style={{ minHeight: "100vh", background: "radial-gradient(circle at top, rgba(201,163,58,0.08), transparent 35%), linear-gradient(to bottom, #0b0b0c, #0d0f12 35%, #0b0b0c 100%)", color: "#F3F3F3", fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", padding: 20 }}>
+      <div style={{ maxWidth: 1300, margin: "0 auto" }}>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
-        <section className="card-dark rounded-[28px] p-6">
-          <h2 className="heading-font mb-4 text-2xl">Standings</h2>
-          <div className="space-y-3">
-            {ranked.map((user, index) => (
-              <div key={`${user.firstName}-${user.lastName}`} className="rounded-[22px] border border-white/10 bg-white/[0.03] p-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(201,163,58,0.14)] text-sm font-semibold text-[#F2D98A]">{index + 1}</div>
-                    <div>
-                      <div className="text-lg font-semibold">{user.firstName} {user.lastName}</div>
-                      <div className="mt-1 text-sm text-[#A6ADB7]">{user.firstChoiceHits} first-choice hits • {user.secondChoiceHits} second-choice hits • {user.confidenceLost} confidence lost</div>
+        {/* Hero */}
+        <div style={{ ...card, padding: 28, marginBottom: 24 }}>
+          <div style={{ display: "inline-flex", padding: "6px 12px", borderRadius: 999, background: "rgba(201,163,58,0.14)", border: "1px solid rgba(201,163,58,0.28)", color: "#F2D98A", fontSize: 12, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>
+            DME Oscars Pool 2026
+          </div>
+          <div style={{ fontFamily: '"Times New Roman", Georgia, serif', fontSize: 54, marginTop: 18, lineHeight: 1.05, fontWeight: 700 }}>Live Leaderboard</div>
+          <div style={{ marginTop: 10, fontSize: 18, color: "#D7D9DD" }}>Winners will appear here as they're announced. Scores update automatically throughout the night.</div>
+        </div>
+
+        {/* Main grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "1.08fr 0.92fr", gap: 24 }}>
+
+          {/* Standings */}
+          <div style={{ ...card, padding: 24 }}>
+            <div style={{ fontFamily: '"Times New Roman", Georgia, serif', fontSize: 34, fontWeight: 700, marginBottom: 16 }}>Standings</div>
+            {ranked.length === 0 ? (
+              <div style={{ color: "#A6ADB7", fontSize: 14 }}>No ballots submitted yet.</div>
+            ) : (
+              <div style={{ display: "grid", gap: 12 }}>
+                {ranked.map((user, index) => (
+                  <div key={`${user.firstName}-${user.lastName}`} style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", borderRadius: 22, padding: 16 }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                        <div style={{ height: 44, width: 44, borderRadius: 999, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(201,163,58,0.14)", color: "#F2D98A", fontWeight: 700, flexShrink: 0 }}>
+                          {index + 1}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 18, fontWeight: 700 }}>{user.firstName} {user.lastName}</div>
+                          <div style={{ marginTop: 4, fontSize: 13, color: "#A6ADB7" }}>
+                            {user.firstChoiceHits} first-choice hits · {user.secondChoiceHits} second-choice hits · {user.confidenceLost} confidence lost
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right", flexShrink: 0 }}>
+                        <div style={{ fontSize: 34, fontWeight: 700 }}>{user.totalScore}</div>
+                        <div style={{ fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "#A6ADB7" }}>Points</div>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-3xl font-semibold text-[#F3F3F3]">{user.totalScore}</div>
-                    <div className="text-xs uppercase tracking-[0.16em] text-[#A6ADB7]">Points</div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Results Progress */}
+          <div style={{ ...card, padding: 24 }}>
+            <div style={{ fontFamily: '"Times New Roman", Georgia, serif', fontSize: 34, fontWeight: 700, marginBottom: 16 }}>Results Progress</div>
+            <div style={{ display: "grid", gap: 10 }}>
+              {OSCARS_2026_CATEGORIES.map((cat) => (
+                <div key={cat.slug} style={{ display: "flex", justifyContent: "space-between", gap: 12, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)", borderRadius: 22, padding: 14, fontSize: 14 }}>
+                  <div style={{ fontWeight: 600 }}>{cat.name}</div>
+                  <div style={{ color: resultsMap.get(cat.slug) ? "#F2D98A" : "#A6ADB7", textAlign: "right", maxWidth: "50%" }}>
+                    {resultsMap.get(cat.slug) || "Pending"}
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </section>
 
-        <section className="card-dark rounded-[28px] p-6">
-          <h2 className="heading-font mb-4 text-2xl">Results Progress</h2>
-          <div className="space-y-3">
-            {OSCARS_2026_CATEGORIES.map((category) => (
-              <div key={category.slug} className="flex items-center justify-between gap-4 rounded-[22px] border border-white/10 bg-white/[0.03] p-4 text-sm">
-                <div className="font-medium text-[#F3F3F3]">{category.name}</div>
-                <div className="max-w-[48%] truncate text-right text-[#A6ADB7]">{resultsMap.get(category.slug) || "Pending"}</div>
-              </div>
-            ))}
-          </div>
-        </section>
+        </div>
+
+        {/* Back link */}
+        <div style={{ marginTop: 24 }}>
+          <a href="/" style={{ padding: "12px 18px", borderRadius: 16, border: "1px solid rgba(255,255,255,0.12)", background: "transparent", color: "#F3F3F3", fontWeight: 500, fontSize: 14, textDecoration: "none" }}>
+            ← Back to ballot
+          </a>
+        </div>
+
       </div>
-    </main>
+    </div>
   );
 }
