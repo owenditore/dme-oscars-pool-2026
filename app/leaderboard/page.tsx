@@ -75,7 +75,7 @@ export default function LeaderboardPage() {
                         <div>
                           <div style={{ fontSize: isMobile ? 15 : 18, fontWeight: 700 }}>{user.firstName} {user.lastName}</div>
                           <div style={{ marginTop: 3, fontSize: 12, color: "#A6ADB7" }}>
-                            {user.firstChoiceHits} first · {user.secondChoiceHits} second · {(() => { const net = user.confidenceWon - user.confidenceLost; return net > 0 ? `+${net} conf` : net < 0 ? `${net} conf` : `0 conf`; })()}
+                            {user.firstChoiceHits} first · {user.secondChoiceHits} second · {(() => { const net = user.confidenceWon - user.confidenceLost; return net > 0 ? `+${net} confidence` : net < 0 ? `${net} confidence` : `0 confidence`; })()}
                           </div>
                         </div>
                       </div>
