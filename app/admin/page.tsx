@@ -3,6 +3,17 @@
 import { useEffect, useState } from "react";
 import { OSCARS_2026_CATEGORIES, OSCARS_2026_NOMINEES } from "@/lib/oscars-2026-seed";
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
+
 const card: React.CSSProperties = {
   background: "rgba(22,24,27,0.92)",
   border: "1px solid rgba(255,255,255,0.1)",
@@ -37,6 +48,7 @@ export default function AdminPage() {
   const [unlocked, setUnlocked] = useState(false);
   const [results, setResults] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     async function load() {
@@ -63,26 +75,26 @@ export default function AdminPage() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "radial-gradient(circle at top, rgba(201,163,58,0.08), transparent 35%), linear-gradient(to bottom, #0b0b0c, #0d0f12 35%, #0b0b0c 100%)", color: "#F3F3F3", fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", padding: 20 }}>
+    <div style={{ minHeight: "100vh", background: "radial-gradient(circle at top, rgba(201,163,58,0.08), transparent 35%), linear-gradient(to bottom, #0b0b0c, #0d0f12 35%, #0b0b0c 100%)", color: "#F3F3F3", fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", padding: isMobile ? 12 : 20 }}>
       <div style={{ maxWidth: 1300, margin: "0 auto" }}>
 
         {/* Hero */}
-        <div style={{ ...card, padding: 28, marginBottom: 24 }}>
+        <div style={{ ...card, padding: isMobile ? 20 : 28, marginBottom: 20 }}>
           <div style={{ display: "inline-flex", padding: "6px 12px", borderRadius: 999, background: "rgba(201,163,58,0.14)", border: "1px solid rgba(201,163,58,0.28)", color: "#F2D98A", fontSize: 12, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>
             Admin
           </div>
-          <div style={{ fontFamily: '"Times New Roman", Georgia, serif', fontSize: 54, marginTop: 18, lineHeight: 1.05, fontWeight: 700 }}>Results Entry</div>
-          <div style={{ marginTop: 10, fontSize: 18, color: "#D7D9DD" }}>Select each winner as it's announced. Scores will update for everyone automatically.</div>
+          <div style={{ fontFamily: '"Times New Roman", Georgia, serif', fontSize: isMobile ? 36 : 54, marginTop: 16, lineHeight: 1.05, fontWeight: 700 }}>Results Entry</div>
+          <div style={{ marginTop: 10, fontSize: isMobile ? 15 : 18, color: "#D7D9DD" }}>Select each winner as it's announced. Scores will update for everyone automatically.</div>
         </div>
 
         {/* Password unlock */}
         {!unlocked ? (
           <div style={{ ...card, padding: 24, marginBottom: 24 }}>
             <div style={{ fontFamily: '"Times New Roman", Georgia, serif', fontSize: 24, fontWeight: 700, marginBottom: 16 }}>Enter admin password to continue</div>
-            <div style={{ display: "flex", gap: 12 }}>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
               <input
                 type="password"
-                style={{ ...inputStyle, maxWidth: 320 }}
+                style={{ ...inputStyle, maxWidth: isMobile ? "100%" : 320 }}
                 placeholder="Admin password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -92,11 +104,11 @@ export default function AdminPage() {
             </div>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
             {OSCARS_2026_CATEGORIES.map((cat) => {
               const nominees = OSCARS_2026_NOMINEES.filter((n) => n.categorySlug === cat.slug);
               return (
-                <div key={cat.slug} style={{ ...card, padding: 20, borderRadius: 24 }}>
+                <div key={cat.slug} style={{ ...card, padding: 18, borderRadius: 24 }}>
                   <div style={{ fontFamily: '"Times New Roman", Georgia, serif', fontSize: 20, fontWeight: 700, marginBottom: 12 }}>{cat.name}</div>
                   <select
                     style={inputStyle}
