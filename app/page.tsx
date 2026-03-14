@@ -253,10 +253,18 @@ export default function BallotPage() {
         </div>
 
         {/* Submit */}
-        <div style={{ marginTop: 24 }}>
+        <div style={{ marginTop: 24, display: "flex", alignItems: "center", gap: 16 }}>
           <button style={btnGold} onClick={handleSubmit} disabled={locked || isSaving}>
             {isSaving ? "Saving..." : "Submit ballot"}
           </button>
+          {status === "Your ballot is in. You can return and update it until 5:00 PM CT." && (
+            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 18px", borderRadius: 16, background: "rgba(201,163,58,0.14)", border: "1px solid rgba(201,163,58,0.28)", color: "#F2D98A", fontWeight: 600, fontSize: 14 }}>
+              ✓ Ballot submitted!
+            </div>
+          )}
+          {status && status !== "Your ballot is in. You can return and update it until 5:00 PM CT." && (
+            <div style={{ fontSize: 14, color: "#F3F3F3" }}>{status}</div>
+          )}
         </div>
 
       </div>
