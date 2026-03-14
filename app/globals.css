@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0b0b0c;
+  --card: #16181b;
+  --card-2: #1b1e22;
+  --text: #f3f3f3;
+  --muted: #a6adb7;
+  --gold: #c9a33a;
+  --gold-soft: rgba(201, 163, 58, 0.14);
+  --line: rgba(255, 255, 255, 0.1);
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(201, 163, 58, 0.08), transparent 35%),
+    linear-gradient(to bottom, #0b0b0c, #0d0f12 35%, #0b0b0c 100%);
+}
+
+h1,
+h2,
+h3,
+.heading-font {
+  font-family: var(--font-playfair), serif;
+}
+
+.input-dark,
+.select-dark {
+  background: var(--card-2);
+  border-color: var(--line);
+  color: var(--text);
+}
+
+.input-dark::placeholder {
+  color: var(--muted);
+}
+
+.input-dark:focus,
+.select-dark:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold);
+}
+
+.card-dark {
+  background: rgba(22, 24, 27, 0.92);
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+}
+
+.gold-pill {
+  background: var(--gold-soft);
+  color: #f2d98a;
+  border: 1px solid rgba(201, 163, 58, 0.28);
+}
+
+.button-gold {
+  background: var(--gold);
+  color: #111;
+}
+
+.button-gold:hover {
+  filter: brightness(1.05);
+}
+
+.button-dark {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+
+.button-dark:hover {
+  border-color: rgba(201, 163, 58, 0.4);
+  background: rgba(255, 255, 255, 0.02);
+}
