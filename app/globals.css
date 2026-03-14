@@ -32,58 +32,62 @@ h3,
   font-family: var(--font-playfair), serif;
 }
 
-.input-dark,
-.select-dark {
-  width: 100%;
-  border-radius: 1rem;
-  border-width: 1px;
-  border-style: solid;
-  padding: 0.75rem 1rem;
-  outline: none;
-  transition: all 0.15s ease;
-  background: var(--card-2);
-  border-color: var(--line);
-  color: var(--text);
-}
+@layer components {
+  .card-dark {
+    background: rgba(22, 24, 27, 0.92);
+    border: 1px solid var(--line);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+  }
 
-.input-dark::placeholder {
-  color: var(--muted);
-}
+  .gold-pill {
+    background: var(--gold-soft);
+    color: #f2d98a;
+    border: 1px solid rgba(201, 163, 58, 0.28);
+  }
 
-.input-dark:focus,
-.select-dark:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 1px var(--gold);
-}
+  .button-gold {
+    background: var(--gold);
+    color: #111;
+    cursor: pointer;
+  }
 
-.card-dark {
-  background: rgba(22, 24, 27, 0.92);
-  border: 1px solid var(--line);
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
-}
+  .button-gold:hover {
+    filter: brightness(1.05);
+  }
 
-.gold-pill {
-  background: var(--gold-soft);
-  color: #f2d98a;
-  border: 1px solid rgba(201, 163, 58, 0.28);
-}
+  .button-dark {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text);
+    cursor: pointer;
+  }
 
-.button-gold {
-  background: var(--gold);
-  color: #111;
-}
+  .button-dark:hover {
+    border-color: rgba(201, 163, 58, 0.4);
+    background: rgba(255, 255, 255, 0.02);
+  }
 
-.button-gold:hover {
-  filter: brightness(1.05);
-}
+  .input-dark,
+  .select-dark {
+    width: 100%;
+    border-radius: 1rem;
+    border-width: 1px;
+    border-style: solid;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: all 0.15s ease;
+    background: var(--card-2);
+    border-color: var(--line);
+    color: var(--text);
+  }
 
-.button-dark {
-  background: transparent;
-  border: 1px solid var(--line);
-  color: var(--text);
-}
+  .input-dark::placeholder {
+    color: var(--muted);
+  }
 
-.button-dark:hover {
-  border-color: rgba(201, 163, 58, 0.4);
-  background: rgba(255, 255, 255, 0.02);
+  .input-dark:focus,
+  .select-dark:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px var(--gold);
+  }
 }
