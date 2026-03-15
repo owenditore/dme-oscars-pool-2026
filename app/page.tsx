@@ -126,7 +126,12 @@ export default function BallotPage() {
     const data = await res.json();
     if (!res.ok) { setStatus(data.error || "Could not load ballot."); return; }
     if (!data.ballot) { setStatus("No existing ballot found for that name yet."); return; }
-    const picksRecord = Object.fromEntries(data.ballot.picks.map((p: BallotPick) => [p.categorySlug, p]));
+    const picksRecord = Object.fromEntries(data.ballot.picks.map((p: BallotPick) => [p.categorySlug, {
+      categorySlug: p.categorySlug,
+      firstChoice: p.firstChoice || "",
+      secondChoice: p.secondChoice || "",
+      confidence: p.confidence ?? 0,
+    }]));
     setDraft({ firstName: data.ballot.firstName, lastName: data.ballot.lastName, picks: { ...makeEmptyDraft().picks, ...picksRecord } });
     setStatus("Existing ballot loaded.");
   }
