@@ -16,7 +16,8 @@ export async function GET(req: NextRequest) {
     .select(`confidence, categories!inner(slug), first_nominee:nominees!ballot_picks_first_nominee_id_fkey(label), second_nominee:nominees!ballot_picks_second_nominee_id_fkey(label)`)
     .eq("ballot_id", ballot.id);
 
-  if (picksError) return NextResponse.json({ error: picksError.message }, { status: 500 });
+  if (picksError) return NextResponse.json({ error: picksError.message, detail: "picks query failed" }, { status: 500 });
+  console.log("picks rows:", JSON.stringify(rows));
 
   const picks: BallotPick[] = (rows || []).map((row: any) => ({
     categorySlug: row.categories.slug,
