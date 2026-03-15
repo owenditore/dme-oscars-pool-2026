@@ -65,13 +65,19 @@ export async function POST(req: NextRequest) {
 
   if (ballotError || !ballot) return NextResponse.json({ error: ballotError?.message || "Could not save ballot." }, { status: 500 });
 
-const ballotPickRows = picks.map((pick) => {
+for (const pick of picks) {
     const categoryId = categoryIdBySlug.get(pick.categorySlug);
-    const firstNomineeId = nomineeIdByKey.get(`${categoryId}::${pick.firstChoice}`);
-    const secondNomineeId = nomineeIdByKey.get(`${categoryId}::${pick.secondChoice}`);
     if (!categoryId) return NextResponse.json({ error: `Category not found: ${pick.categorySlug}` }, { status: 400 });
-    if (!firstNomineeId) return NextResponse.json({ error: `First choice nominee not found: ${pick.firstChoice} in ${pick.categorySlug}` }, { status: 400 });
-    if (!secondNomineeId) return NextResponse.json({ error: `Second choice nominee not found: ${pick.secondChoice} in ${pick.categorySlug}` }, { status: 400 });
+    const firstNomineeId = nomineeIdByKey.get(`${categoryId}::${pick.firstChoice}`);
+    if (!firstNomineeId) return NextResponse.json({ error: `First choice not found: ${pick.firstChoice} in ${pick.categorySlug}` }, { status: 400 });
+    const secondNomineeId = nomineeIdByKey.get(`${categoryId}::${pick.secondChoice}`);
+    if (!secondNomineeId) return NextResponse.json({ error: `Second choice not found: ${pick.secondChoice} in ${pick.categorySlug}` }, { status: 400 });
+  }
+
+  const ballotPickRows = picks.map((pick) => {
+    const categoryId = categoryIdBySlug.get(pick.categorySlug)!;
+    const firstNomineeId = nomineeIdByKey.get(`${categoryId}::${pick.firstChoice}`)!;
+    const secondNomineeId = nomineeIdByKey.get(`${categoryId}::${pick.secondChoice}`)!;
     return { ballot_id: ballot.id, category_id: categoryId, first_nominee_id: firstNomineeId, second_nominee_id: secondNomineeId, confidence: pick.confidence };
   });
 
