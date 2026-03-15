@@ -124,6 +124,7 @@ export default function BallotPage() {
     const q = new URLSearchParams({ fullNameNormalized: normalizeFullName(draft.firstName, draft.lastName) });
     const res = await fetch(`/api/ballot?${q}`, { cache: "no-store" });
     const data = await res.json();
+    console.log("ballot data:", JSON.stringify(data));
     if (!res.ok) { setStatus(data.error || "Could not load ballot."); return; }
     if (!data.ballot) { setStatus("No existing ballot found for that name yet."); return; }
     const picksRecord = Object.fromEntries(data.ballot.picks.map((p: BallotPick) => [p.categorySlug, {
